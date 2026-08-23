@@ -1,0 +1,10 @@
+<!-- Campus Capstone logo: graduation cap represents academia; connected nodes represent team matching. -->
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="56" fill="#0F172A"/>
+  <path d="M42 102L128 58L214 102L128 146L42 102Z" fill="#2DD4BF"/>
+  <path d="M70 117V157C70 174 96 190 128 190C160 190 186 174 186 157V117L128 146L70 117Z" fill="#14B8A6"/>
+  <path d="M214 104V158" stroke="#5EEAD4" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="214" cy="171" r="12" fill="#5EEAD4"/>
+  <circle cx="91" cy="151" r="9" fill="#0F172A"/><circle cx="128" cy="166" r="9" fill="#0F172A"/><circle cx="165" cy="151" r="9" fill="#0F172A"/>
+  <path d="M91 151L128 166L165 151" stroke="#CCFBF1" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,2 @@
+// Shows the unauthorized screen when a signed-in user opens another role's pages.
+import { Navigate } from 'react-router-dom';import useAuth from './useAuth';function RoleProtectedRoute({role,children}){const{user,isAuthenticated}=useAuth();if(!isAuthenticated)return <Navigate to="/login" replace/>;return user.role===role?children:<Navigate to="/unauthorized" replace/>}export default RoleProtectedRoute;

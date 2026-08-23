@@ -1,0 +1,2 @@
+// Dummy student records used by the simulated frontend services.
+export default [{id:1,name:'Priya Sharma',email:'priya@university.edu',department:'Computer Science',role:'Student',status:'Active',skills:['React','Figma'],date:'2026-07-20'},{id:2,name:'Daniel Lee',email:'daniel@university.edu',department:'Software Engineering',role:'Student',status:'Active',skills:['Node.js','MySQL'],date:'2026-07-22'}];

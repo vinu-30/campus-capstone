@@ -1,0 +1,3 @@
+// Reusable profile summary card displayed on the student dashboard.
+function ProfileCard({ student }) { return <article className="student-profile-card"><div className="student-avatar">{student.initials}</div><div className="student-details"><span className="student-status">Student Profile</span><h2>{student.name}</h2><p><i className="bi bi-patch-check-fill" /> {student.id}</p><p><i className="bi bi-building" /> {student.department} · {student.year}</p><p><i className="bi bi-envelope" /> {student.email}</p></div><div className="completion"><strong>{student.completion}%</strong><span>Profile complete</span><div className="progress"><div className="progress-bar" style={{ width: `${student.completion}%` }} /></div></div></article>; }
+export default ProfileCard;

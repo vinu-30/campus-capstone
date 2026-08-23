@@ -1,0 +1,2 @@
+// Reusable skill card with edit and delete controls.
+function SkillCard({skill,onAction}){return <article className="admin-skill"><i className="bi bi-lightning-charge-fill"/><div className="flex-grow-1"><strong>{skill.name}</strong><small>{skill.category} · {skill.students} students</small></div><button className="btn btn-sm" onClick={()=>onAction('Editing',skill.name)}><i className="bi bi-pencil"/></button><button className="btn btn-sm text-danger" onClick={()=>onAction('Deleting',skill.name)}><i className="bi bi-trash"/></button></article>};export default SkillCard;
