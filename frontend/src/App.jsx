@@ -1,5 +1,15 @@
 // Root application component; AppRoutes contains the complete organized route map.
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
-function App() { return <BrowserRouter><AppRoutes /></BrowserRouter>; }
+import AuthProvider from './auth/AuthProvider';
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
 export default App;

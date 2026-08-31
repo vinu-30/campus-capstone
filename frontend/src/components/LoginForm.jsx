@@ -2,12 +2,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRoleDashboard, login } from '../services/authService';
+import useAuth from '../auth/useAuth';
 
 function LoginForm({ selectedRole }) {
   const navigate = useNavigate();
+  const { syncUser } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '', rememberMe: false });
   const [validated, setValidated] = useState(false);
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
 
   const handleChange = (event) => {
     const { name, value, checked, type } = event.target;
@@ -18,6 +21,7 @@ function LoginForm({ selectedRole }) {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
+    setInfo('');
 
     if (!form.checkValidity()) return;
     const response = login({ ...formData, role: selectedRole });
@@ -27,12 +31,14 @@ function LoginForm({ selectedRole }) {
       return;
     }
 
+    syncUser();
     navigate(getRoleDashboard(selectedRole));
   };
 
   return (
     <form className={`needs-validation ${validated ? 'was-validated' : ''}`} noValidate onSubmit={handleSubmit}>
       {error && <div className="alert alert-danger d-flex gap-2 align-items-center" role="alert"><i className="bi bi-exclamation-circle-fill" />{error}</div>}
+      {info && <div className="alert alert-info d-flex gap-2 align-items-center" role="status"><i className="bi bi-info-circle-fill" />{info}</div>}
       <div className="mb-3">
         <label className="form-label" htmlFor="email">Email address</label>
         <div className="input-group">
@@ -42,7 +48,7 @@ function LoginForm({ selectedRole }) {
         </div>
       </div>
       <div className="mb-3">
-        <div className="d-flex justify-content-between"><label className="form-label" htmlFor="password">Password</label><button type="button" className="forgot-link">Forgot Password?</button></div>
+        <div className="d-flex justify-content-between"><label className="form-label" htmlFor="password">Password</label><button type="button" className="forgot-link" onClick={() => { setError(''); setInfo('Password reset is available after backend email setup. For now, register a new demo account if needed.'); }}>Forgot Password?</button></div>
         <div className="input-group">
           <span className="input-group-text"><i className="bi bi-lock" /></span>
           <input className="form-control" id="password" name="password" type="password" placeholder="Enter your password" minLength="6" value={formData.password} onChange={handleChange} required />
