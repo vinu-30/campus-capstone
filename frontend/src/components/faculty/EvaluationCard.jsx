@@ -1,0 +1,2 @@
+// Star rating input for one evaluation criterion.
+function EvaluationCard({label,value,onChange}){return <div className="evaluation-item"><span>{label}</span><div>{[1,2,3,4,5].map(star=><button type="button" key={star} onClick={()=>onChange(star)} className={star<=value?'star active':'star'} aria-label={`${star} stars`}><i className="bi bi-star-fill"/></button>)}</div></div>};export default EvaluationCard;

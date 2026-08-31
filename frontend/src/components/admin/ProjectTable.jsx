@@ -1,0 +1,2 @@
+// Reusable project row for Admin project approvals.
+function ProjectTable({project,onAction}){return <tr><td><strong>{project.title}</strong></td><td>{project.lead}</td><td>{project.members}</td><td>{project.tech}</td><td>{project.status}</td><td className="d-flex gap-1"><button className="btn btn-sm btn-success" onClick={()=>onAction('Approved',project.title)}>Approve</button><button className="btn btn-sm btn-outline-danger" onClick={()=>onAction('Rejected',project.title)}>Reject</button></td></tr>};export default ProjectTable;

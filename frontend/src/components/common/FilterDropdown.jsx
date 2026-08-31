@@ -1,0 +1,2 @@
+// Reusable select control for department, status, role, technology, or year filters.
+function FilterDropdown({label='Filter',value,onChange,options=[]}){return <select aria-label={label} className="form-select ui-filter" value={value} onChange={e=>onChange(e.target.value)}><option value="">All {label}s</option>{options.map(x=><option key={x} value={x}>{x}</option>)}</select>}export default FilterDropdown;

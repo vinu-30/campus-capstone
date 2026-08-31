@@ -1,0 +1,3 @@
+// Lets a lead assign one selected student to a team role.
+function TeamMemberCard({ member, role, onRoleChange }) { return <article className="lead-member"><div className="lead-member-avatar">{member.initials}</div><div className="flex-grow-1"><strong>{member.name}</strong><small>{member.skills}</small></div><select className="form-select form-select-sm" value={role} onChange={(e)=>onRoleChange(member.name,e.target.value)}><option>Team Leader</option><option>Frontend Developer</option><option>Backend Developer</option><option>Database Developer</option><option>UI/UX Designer</option></select></article>; }
+export default TeamMemberCard;

@@ -1,0 +1,2 @@
+// Reusable loading, error, and empty-state UI for service-backed screens.
+function DataState({ loading, error, isEmpty, children }) { if (loading) return <div className="loading-card"><div className="spinner-border text-primary" role="status"/><span>Loading records...</span></div>; if (error) return <div className="alert alert-danger">{error}</div>; if (isEmpty) return <div className="empty-state">No Records Found</div>; return children; } export default DataState;
