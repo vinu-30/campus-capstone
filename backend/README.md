@@ -6,6 +6,7 @@ This Express.js REST API uses a simple MVC structure and MySQL.
 ## Setup
 
 1. Run `database/schema.sql` in MySQL Workbench.
+   - If you already created the `students` table, run the `ALTER TABLE` statement in that file to add GitHub profiles.
 2. Copy `.env.example` to `.env` and enter your MySQL password.
 3. Run `npm.cmd run dev` in this folder.
 

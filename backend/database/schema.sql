@@ -6,10 +6,14 @@ CREATE TABLE students (
   id INT AUTO_INCREMENT PRIMARY KEY,
   full_name VARCHAR(100) NOT NULL,
   email VARCHAR(120) NOT NULL UNIQUE,
+  github_username VARCHAR(39) NULL,
   department VARCHAR(100) NOT NULL,
   year_of_study VARCHAR(30) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- For an already-created database, run this once instead of recreating the table:
+-- ALTER TABLE students ADD COLUMN github_username VARCHAR(39) NULL AFTER email;
 
 CREATE TABLE faculty_advisors (
   id INT AUTO_INCREMENT PRIMARY KEY,
