@@ -1,31 +1,95 @@
-// Frontend-only registration and authentication service using LocalStorage.
-const USERS_KEY = 'campusCapstoneRegisteredUsers';
+// Handles authentication through the backend REST API.
+import api from './api';
 
-export function register(user) {
-  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-  if (users.some((item) => item.email === user.email)) return { success: false, message: 'This email is already registered.' };
-  localStorage.setItem(USERS_KEY, JSON.stringify([...users, user]));
-  return { success: true };
+// Register a new user through the backend.
+export async function register(user) {
+  try {
+    const response = await api.post('/auth/register', {
+      full_name: user.fullName,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+    });
+
+    return {
+      success: true,
+      message: response.data.message,
+      userId: response.data.userId,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ||
+        'Registration failed. Please try again.',
+    };
+  }
 }
 
-export function login({ email, password, role, rememberMe }) {
-  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-  const user = users.find((item) => item.email === email && item.password === password);
-  if (!user) return { success: false, message: 'Account not found. Please register before signing in.' };
+// Login through the backend.
+export async function login({ email, password, role, rememberMe }) {
+  try {
+    const response = await api.post('/auth/login', {
+      email,
+      password,
+    });
 
-  // The selected user information persists in localStorage for this frontend demo.
-  localStorage.setItem('campusCapstoneUser', JSON.stringify({ ...user, role: user.role || role, rememberMe }));
-  return { success: true };
+    const { token, user } = response.data;
+
+    // Store the JWT token.
+    localStorage.setItem('campusCapstoneToken', token);
+
+    // Store the authenticated user.
+    localStorage.setItem(
+      'campusCapstoneUser',
+      JSON.stringify({
+        ...user,
+        role: user.role || role,
+        rememberMe,
+      })
+    );
+
+    return {
+      success: true,
+      user,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error.response?.data?.message ||
+        'Login failed. Please check your email and password.',
+    };
+  }
 }
 
+// Get the currently logged-in user.
 export function getCurrentUser() {
-  return JSON.parse(localStorage.getItem('campusCapstoneUser') || 'null');
+  return JSON.parse(
+    localStorage.getItem('campusCapstoneUser') || 'null'
+  );
 }
 
-export function isAuthenticated() { return Boolean(getCurrentUser()); }
+// Check whether a user is authenticated.
+export function isAuthenticated() {
+  return Boolean(
+    localStorage.getItem('campusCapstoneToken') &&
+    getCurrentUser()
+  );
+}
 
-export function logout() { localStorage.removeItem('campusCapstoneUser'); }
+// Logout the current user.
+export function logout() {
+  localStorage.removeItem('campusCapstoneToken');
+  localStorage.removeItem('campusCapstoneUser');
+}
 
+// Get the dashboard URL based on the user's role.
 export function getRoleDashboard(role) {
-  return { Student: '/student/dashboard', 'Project Lead': '/lead/dashboard', 'Faculty Advisor': '/faculty/dashboard', Admin: '/admin/dashboard' }[role] || '/dashboard';
+  return {
+    Student: '/student/dashboard',
+    'Project Lead': '/lead/dashboard',
+    'Faculty Advisor': '/faculty/dashboard',
+    Admin: '/admin/dashboard',
+  }[role] || '/dashboard';
 }
