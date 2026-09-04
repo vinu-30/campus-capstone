@@ -1,5 +1,15 @@
-// Maps the dashboard summary endpoint to its controller.
+// Maps the dashboard endpoints to their controller functions.
+
 const router = require('express').Router();
-const { getDashboardSummary } = require('../controllers/dashboardController');
+
+const {
+  getDashboardSummary,
+  getLeadDashboard
+} = require('../controllers/dashboardController');
+
 router.get('/summary', getDashboardSummary);
+
+router.get('/lead', getLeadDashboard);
+
 module.exports = router;
+

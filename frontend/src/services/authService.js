@@ -1,31 +1,7 @@
-// Frontend-only registration and authentication service using LocalStorage.
-const USERS_KEY = 'campusCapstoneRegisteredUsers';
-
-export function register(user) {
-  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-  if (users.some((item) => item.email === user.email)) return { success: false, message: 'This email is already registered.' };
-  localStorage.setItem(USERS_KEY, JSON.stringify([...users, user]));
-  return { success: true };
-}
-
-export function login({ email, password, role, rememberMe }) {
-  const users = JSON.parse(localStorage.getItem(USERS_KEY) || '[]');
-  const user = users.find((item) => item.email === email && item.password === password);
-  if (!user) return { success: false, message: 'Account not found. Please register before signing in.' };
-
-  // The selected user information persists in localStorage for this frontend demo.
-  localStorage.setItem('campusCapstoneUser', JSON.stringify({ ...user, role: user.role || role, rememberMe }));
-  return { success: true };
-}
-
-export function getCurrentUser() {
-  return JSON.parse(localStorage.getItem('campusCapstoneUser') || 'null');
-}
-
+import api from './api';
+export async function register({ fullName, email, password, role }) { try { const { data } = await api.post('/users/register', { full_name: fullName, email, password, role }); return { success: true, user: data.data }; } catch (error) { return { success: false, message: error.response?.data?.message || 'Unable to register. Please try again.' }; } }
+export async function login({ email, password, rememberMe }) { try { const { data } = await api.post('/users/login', { email, password }); const user = data.data; localStorage.setItem('campusCapstoneUser', JSON.stringify({ ...user, rememberMe })); return { success: true, user }; } catch (error) { return { success: false, message: error.response?.data?.message || 'Unable to sign in. Please check the backend server.' }; } }
+export function getCurrentUser() { return JSON.parse(localStorage.getItem('campusCapstoneUser') || 'null'); }
 export function isAuthenticated() { return Boolean(getCurrentUser()); }
-
 export function logout() { localStorage.removeItem('campusCapstoneUser'); }
-
-export function getRoleDashboard(role) {
-  return { Student: '/student/dashboard', 'Project Lead': '/lead/dashboard', 'Faculty Advisor': '/faculty/dashboard', Admin: '/admin/dashboard' }[role] || '/dashboard';
-}
+export function getRoleDashboard(role) { return { Student: '/student/dashboard', 'Project Lead': '/lead/dashboard', 'Faculty Advisor': '/faculty/dashboard', Admin: '/admin/dashboard' }[role] || '/dashboard'; }

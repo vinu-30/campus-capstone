@@ -10,3 +10,24 @@ exports.getDashboardSummary = asyncHandler(async (req, res) => {
   ]);
   res.json({ success: true, data: { totals: { students: students[0].total, projects: projects[0].total, teams: teams[0].total, skills: skills[0].total }, recentProjects } });
 });
+exports.getLeadDashboard = asyncHandler(async (req, res) => {
+  const [[projectsCreated], [activeProjects], [teamsFormed], [pendingRequests]] =
+    await Promise.all([
+      db.query('SELECT COUNT(*) AS total FROM projects'),
+      db.query("SELECT COUNT(*) AS total FROM projects WHERE status IN ('Active', 'In Progress')"),
+      db.query('SELECT COUNT(*) AS total FROM teams'),
+      db.query("SELECT COUNT(*) AS total FROM applications WHERE status = 'Pending'"),
+    ]);
+
+  res.json({
+    success: true,
+    data: {
+      stats: {
+        projectsCreated: projectsCreated[0].total,
+        activeProjects: activeProjects[0].total,
+        teamsFormed: teamsFormed[0].total,
+        pendingRequests: pendingRequests[0].total,
+      },
+    },
+  });
+});

@@ -14,20 +14,20 @@ function LoginForm({ selectedRole }) {
     setFormData((currentData) => ({ ...currentData, [name]: type === 'checkbox' ? checked : value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     setValidated(true);
 
     if (!form.checkValidity()) return;
-    const response = login({ ...formData, role: selectedRole });
+    const response = await login(formData);
 
     if (!response.success) {
       setError(response.message);
       return;
     }
 
-    navigate(getRoleDashboard(selectedRole));
+    navigate(getRoleDashboard(response.user.role));
   };
 
   return (
@@ -51,7 +51,7 @@ function LoginForm({ selectedRole }) {
       </div>
       <div className="form-check mb-4"><input className="form-check-input" id="rememberMe" name="rememberMe" type="checkbox" checked={formData.rememberMe} onChange={handleChange} /><label className="form-check-label" htmlFor="rememberMe">Remember me</label></div>
       <button className="btn login-button w-100" type="submit">Login <i className="bi bi-arrow-right" /></button>
-      <p className="demo-note"><i className="bi bi-info-circle" /> Please register first before signing in.</p>
+      <p className="demo-note"><i className="bi bi-info-circle" /> Sign in with your registered account.</p>
     </form>
   );
 }

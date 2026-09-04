@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import DashboardLayout from '../../layouts/DashboardLayout';
 import projectService from '../../services/projectService';
 
-function CreateProject() {
+function EditProject() {
+  const { id } = useParams();
   const nav = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -17,8 +18,41 @@ function CreateProject() {
     description: ''
   });
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const loadProject = async () => {
+      try {
+        const project = await projectService.getById(id);
+
+        setFormData({
+          title: project.title || '',
+          category: project.category || '',
+          technologies: project.technologies || '',
+          skills: project.required_skills || '',
+          teamMembers: project.team_members || '',
+          duration: project.duration || '',
+          deadline: project.deadline
+            ? project.deadline.substring(0, 10)
+            : '',
+          description: project.description || ''
+        });
+      } catch (err) {
+        console.error('Failed to load project:', err);
+
+        setError(
+          err.response?.data?.message ||
+          'Failed to load project.'
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProject();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,11 +66,11 @@ function CreateProject() {
   const submit = async (e) => {
     e.preventDefault();
 
-    setLoading(true);
+    setSaving(true);
     setError('');
 
     try {
-      await projectService.create({
+      await projectService.update(id, {
         title: formData.title,
         category: formData.category,
         technologies: formData.technologies,
@@ -49,16 +83,28 @@ function CreateProject() {
 
       nav('/lead/projects');
     } catch (err) {
-      console.error('Project creation failed:', err);
+      console.error('Project update failed:', err);
 
       setError(
         err.response?.data?.message ||
-        'Failed to create project. Please try again.'
+        'Failed to update project.'
       );
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <main className="lead-page">
+          <div className="lead-panel">
+            <p>Loading project...</p>
+          </div>
+        </main>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -66,8 +112,8 @@ function CreateProject() {
 
         <div className="lead-heading">
           <div>
-            <h1>Create Project</h1>
-            <p>Define the requirements for a new capstone project.</p>
+            <h1>Edit Project</h1>
+            <p>Update the details of your capstone project.</p>
           </div>
         </div>
 
@@ -154,8 +200,8 @@ function CreateProject() {
                 name="teamMembers"
                 value={formData.teamMembers}
                 onChange={handleChange}
-                required
                 min="1"
+                required
               />
             </div>
 
@@ -211,15 +257,15 @@ function CreateProject() {
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={loading}
+              disabled={saving}
             >
-              {loading ? 'Creating...' : 'Create Project'}
+              {saving ? 'Saving...' : 'Save Changes'}
             </button>
 
             <button
               type="button"
               className="btn btn-outline-secondary"
-              onClick={() => nav('/lead/dashboard')}
+              onClick={() => nav('/lead/projects')}
             >
               Cancel
             </button>
@@ -232,4 +278,4 @@ function CreateProject() {
   );
 }
 
-export default CreateProject;
+export default EditProject;
